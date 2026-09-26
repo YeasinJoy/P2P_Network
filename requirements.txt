@@ -1,0 +1,16 @@
+# requirements.txt
+# -----------------
+# This project uses ONLY Python's standard library.
+# No third-party packages need to be installed.
+#
+# Standard library modules used:
+#   socket    — TCP network communication
+#   threading — concurrent connection handling
+#   json      — encoding / decoding messages
+#   struct    — binary integer packing for the 4-byte length header
+#   os        — file path and directory operations
+#   uuid      — generating a unique peer ID
+#   sys       — clean program exit
+#
+# Python version requirement: 3.9 or later
+# Run with:  python main.py
