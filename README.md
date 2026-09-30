@@ -169,57 +169,40 @@ The application handles all files as raw binary data streams, supporting text fi
 
 ## 7. Example Screenshots
 
-### 7.1 Graphical User Interface Layout
-Below is the structural layout of the application window:
+Actual screenshots captured from the running application demonstrating all key requirements of the assignment:
 
-```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ P2P Network — UAP CSE 433                                           - [X]    │
-├──────────────────────────────────────────────────────────────────────────────┤
-│  My Peer   Name: [ Alice       ]   Port: [ 5000 ]   [▶ Start Peer]  [■ Stop] │
-├──────────────────────────────────────────────────────────────────────────────┤
-│  Connect   IP:   [ 127.0.0.1   ]   Port: [ 5001 ]   [⇌ Connect   ]           │
-├────────────────────────────┬─────────────────────────────────────────────────┤
-│ Connected Peers            │ Messages / Events                               │
-│ ┌────────────────────────┐ │ ┌─────────────────────────────────────────────┐ │
-│ │ Bob [92bd71e3] :5001   │ │ │ [INFO] Peer 'Alice' started on port 5000    │ │
-│ │ Charlie [c8e42a91]     │ │ │ [INFO] Connected: Bob [92bd71e3]            │ │
-│ │                        │ │ │ Bob -> You: Hello Alice!                    │ │
-│ │                        │ │ │ You → Bob: Hi Bob! Sending the lecture video│ │
-│ │                        │ │ │ [FILE] video.mp4 → Bob: 50%                 │ │
-│ │                        │ │ │ [FILE] video.mp4 sent successfully to Bob.  │ │
-│ │                        │ │ │ [FILE] Received: notes.pdf → saved to down..│ │
-│ └────────────────────────┘ │ └─────────────────────────────────────────────┘ │
-├────────────────────────────┴─────────────────────────────────────────────────┤
-│  Send Text: [ Can you check the slides?                     ]  [ Send ➤ ]    │
-├──────────────────────────────────────────────────────────────────────────────┤
-│  [ 📁 Choose File & Send ]                                                   │
-├──────────────────────────────────────────────────────────────────────────────┤
-│ Running as 'Alice' (id=a83f21c4) on port 5000                                │
-└──────────────────────────────────────────────────────────────────────────────┘
-```
+### 7.1 Peer Startup and Server Initialization
+Starting Peer **Alice** on TCP listening port `5000`. The server socket binds to `0.0.0.0:5000`, generates a unique session ID (`78ab6269`), and enters the listening loop ready to accept incoming connections.
 
-### 7.2 Application Demonstration Visuals
+![Peer Startup](screenshots/01_peer_startup.png)
 
-#### Peer 1 (Alice) & Peer 2 (Bob) Connected:
-```
-+-----------------------------------------------------------------------------+
-| Alice Window (Port 5000)                   Bob Window (Port 5001)           |
-| Connected Peers:                           Connected Peers:                 |
-|   - Bob [92bd71e3]  127.0.0.1:5001           - Alice [a83f21c4]  :5000      |
-|                                                                             |
-| Log:                                       Log:                             |
-|   Bob -> You: Hello Alice!                   You → Alice: Hello Alice!      |
-|   You → Bob: Sending photo.jpg               [FILE] Receiving 'photo.jpg'   |
-|   [FILE] photo.jpg sent successfully.        [FILE] Saved: downloads/photo..|
-+-----------------------------------------------------------------------------+
-```
+---
 
-*(You can also place actual PNG screenshots in a `screenshots/` directory and embed them here:)*
-```markdown
-![Peer 1 and Peer 2 Communication](screenshots/peer_chat.png)
-![File Transfer Complete](screenshots/file_transfer.png)
-```
+### 7.2 Connecting Two Peers (Handshake Established)
+Peer **Bob** starts on port `5001` and connects to Alice at `127.0.0.1:5000`. The two peers perform the automatic two-way `hello` and `hello_ack` handshake. Both peers immediately appear in each other's **Connected Peers** listbox with their IP and listening port.
+
+![Two Peers Connected](screenshots/02_two_peers_connected.png)
+
+---
+
+### 7.3 Two-Way Text Messaging
+Alice selects Bob and sends a direct text message. Bob receives it in real time and sends a reply back to Alice. Both messages appear in the respective communication logs without passing through any central server.
+
+![Text Messaging](screenshots/03_text_messaging.png)
+
+---
+
+### 7.4 Binary File Transfer (Chunked Streaming & Verification)
+Alice selects a binary document (`project_sample.pdf`) and transmits it to Bob. The transfer sends JSON metadata first, followed by the raw binary stream in 64 KiB chunks with percentage progress logging. Bob receives and verifies the full byte stream, saving it safely into the `downloads/` directory.
+
+![Binary File Transfer](screenshots/04_file_transfer.png)
+
+---
+
+### 7.5 Multi-Peer Network (3-Peer Mesh Demonstration)
+A third peer (**Charlie** on port `5002`) joins the network, connecting to Alice and Bob. Alice maintains multiple concurrent socket threads, listing both Bob and Charlie simultaneously in her **Connected Peers** roster.
+
+![Multi-Peer Network](screenshots/05_multi_peer_network.png)
 
 ---
 
